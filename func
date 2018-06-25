@@ -1,0 +1,30 @@
+def get_best_grid():
+    min_exp = 1
+    max_exp = 10
+    min_val = 1
+    max_val = 1
+    best_grid = None
+    
+    for i in np.arange(10, 2, -1):
+        
+        c = generate_polynomials(i, min_exp, max_exp)
+        print(c)
+        grid = grid_linear_svc_test(X, y, c)
+        
+        left_boundry_exp = math.log(grid.best_estimator_.C, i) - 1
+        min_exp = math.floor(math.log(math.pow(i, left_boundry_exp), i-1))
+            
+        right_boundry_exp = math.log(grid.best_estimator_.C, i) + 1
+        max_exp = math.ceil(math.log(math.pow(i, right_boundry_exp), i-1))
+        
+        if(best_grid == None or grid.best_score_ >= best_grid.best_score_):
+            best_grid = grid
+    
+    c = np.arange(min_val, max_val+1, 1)
+    print(c)
+    grid = grid_linear_svc_test(X, y, c)
+    
+    if(best_grid == None or grid.best_score_ >= best_grid.best_score_):
+            best_grid = grid
+    
+    return best_grid
